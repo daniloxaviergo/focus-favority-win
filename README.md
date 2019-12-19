@@ -2,7 +2,7 @@
 
 Encontrar uma janela específica com o mínimo de esforço possível. Para isso, seleciono a janela e adiciono um atalho para acessá-la.
 
-![](https://github.com/daniloxaviergo/focus-favority-win/blob/master/screen/app.png?raw=true =250x250)
+![](https://github.com/daniloxaviergo/focus-favority-win/blob/master/screen/app.png?raw=true)
 
 ```
 s1 -> super+1
