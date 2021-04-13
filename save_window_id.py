@@ -9,107 +9,93 @@ import json
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-outt = os.popen('/home/danilo/scripts/get_current_window.sh').read()
-current_window_id = outt.replace(',', '').split('x')[1]
-current_window_id = re.sub(r'(\r\n\t|\n|\r\t|\n)', '', current_window_id)
+sys.path.append("/home/danilo/scripts/")
 
-outt = os.popen('wmctrl -dliGu').read()
-lines = outt.split("\n")
-wmctrl_line = ''
+from wmctrl_window import WmctrlWindow
 
-for line in lines:
-  if line.find(current_window_id) >= 0:
-    wmctrl_line = line
+def get_current_window():
+  outt = os.popen('/home/danilo/scripts/get_current_window.sh').read()
+  current_window_id = outt.replace(',', '').split('x')[1]
+  current_window_id = re.sub(r'(\r\n\t|\n|\r\t|\n)', '', current_window_id)
 
-class SaveWindowId(Gtk.Window):
-  def __init__(self):
-    Gtk.Window.__init__(self, title="save window id", default_width=500, default_height=230)
-    self.border_width = 10
+  outt = os.popen('wmctrl -dliGu').read()
+  lines = outt.split("\n")
+  wmctrl_line = ''
 
-    self.connect("key-press-event", self.on_window_key_press)
+  for line in lines:
+    if line.find(current_window_id) >= 0:
+      wmctrl_line = line
+  return wmctrl_line
 
-    self.box_outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    self.add(self.box_outer)
+class SaveWindowId:
+  def on_window1_destroy(self, *args):
+    Gtk.main_quit()
 
-    self.listbox = Gtk.ListBox()
-    self.listbox.selection_mode = Gtk.SelectionMode.NONE
-    self.box_outer.pack_start(self.listbox, True, True, 0)
+  def on_window1_show(self, window1):
+    label1 = builder.get_object('label1')
+    combo = builder.get_object('combo')
+    active_window = WmctrlWindow(wmctrl_line)
 
-    self.row = Gtk.ListBoxRow()
-    self.hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
-    self.row.add(self.hbox)
-    self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    self.hbox.pack_start(self.vbox, True, True, 0)
+    label1.set_text(active_window.kname)
+    combo.insert(0,  '0',  's1')
+    combo.insert(1,  '1',  's2')
+    combo.insert(2,  '2',  's3')
+    combo.insert(3,  '3',  's4')
+    combo.insert(4,  '4',  's5')
+    combo.insert(5,  '5',  's6')
+    combo.insert(6,  '6',  's7')
+    combo.insert(7,  '7',  's8')
+    combo.insert(8,  '8',  's9')
+    combo.insert(9,  '9',  'ss1')
+    combo.insert(10, '10', 'ss2')
+    combo.insert(11, '11', 'ss3')
+    combo.insert(12, '12', 'ss4')
+    combo.insert(13, '13', 'ss5')
+    combo.insert(14, '14', 'ss6')
+    combo.insert(15, '15', 'ss7')
+    combo.insert(16, '16', 'ss8')
+    combo.insert(17, '17', 'ss9')
+    combo.insert(18, '18', 'alt1')
+    combo.insert(19, '19', 'alt2')
+    combo.insert(20, '20', 'alt3')
+    combo.insert(21, '21', 'alt4')
+    combo.insert(22, '22', 'alt5')
+    combo.insert(23, '23', 'alt6')
+    combo.insert(24, '24', 'alt7')
+    combo.insert(25, '25', 'alt8')
+    combo.insert(26, '26', 'alt9')
 
-    self.label1 = Gtk.Label(label=wmctrl_line, xalign=0, ellipsize=True)
-    self.vbox.pack_start(self.label1, True, True, 0);
-
-    self.listbox.add(self.row)
-
-    self.row = Gtk.ListBoxRow()
-    self.hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
-    self.row.add(self.hbox)
-    self.label = Gtk.Label(label="Atalho", xalign=0)
-    self.combo = Gtk.ComboBoxText()
-    self.combo.insert(0,  "0",  "s1")
-    self.combo.insert(1,  "1",  "s2")
-    self.combo.insert(2,  "2",  "s3")
-    self.combo.insert(3,  "3",  "s4")
-    self.combo.insert(4,  "4",  "s5")
-    self.combo.insert(5,  "5",  "s6")
-    self.combo.insert(6,  "6",  "s7")
-    self.combo.insert(7,  "7",  "s8")
-    self.combo.insert(8,  "8",  "s9")
-    self.combo.insert(9,  "9",  "ss1")
-    self.combo.insert(10, "10", "ss2")
-    self.combo.insert(11, "11", "ss3")
-    self.combo.insert(12, "12", "ss4")
-    self.combo.insert(13, "13", "ss5")
-    self.combo.insert(14, "14", "ss6")
-    self.combo.insert(15, "15", "ss7")
-    self.combo.insert(16, "16", "ss8")
-    self.combo.insert(17, "17", "ss9")
-    self.combo.insert(18, "18", "alt1")
-    self.combo.insert(19, "19", "alt2")
-    self.combo.insert(20, "20", "alt3")
-    self.combo.insert(21, "21", "alt4")
-    self.combo.insert(22, "22", "alt5")
-    self.combo.insert(23, "23", "alt6")
-    self.combo.insert(24, "24", "alt7")
-    self.combo.insert(25, "25", "alt8")
-    self.combo.insert(26, "26", "alt9")
-    self.hbox.pack_start(self.label, False, True, 0)
-    self.hbox.pack_start(self.combo, True, True, 0)
-
-    self.vbox.pack_start(self.row, True, True, 0)
-
-    self.button = Gtk.Button(label="Save")
-    self.button.connect("clicked", self.on_button_clicked)
-    self.vbox.pack_start(self.button, True, True, 0)
-
-  def on_window_key_press(self, widget, event):
+  def on_window1_key_press_event(self, window, event):
     keycode = event.get_keycode()[1]
 
     if(keycode == 9):
       sys.exit()
 
-  def on_button_clicked(self, widget):
-    if self.combo.get_active_text() == None:
+  def on_button_clicked(self, button):
+    combo = builder.get_object('combo')
+    label1 = builder.get_object('label1')
+
+    if combo.get_active_text() == None:
       return
 
-    str_json = open("/home/danilo/scripts/wids.json", "r").read()
+    str_json = open('/home/danilo/scripts/wids.json', 'r').read()
     jjson = json.loads(str_json)
 
-    key_json = self.combo.get_active_text()
+    key_json = combo.get_active_text()
     jjson[key_json] = wmctrl_line
 
-    wids = open("/home/danilo/scripts/wids.json", "w")
+    wids = open('/home/danilo/scripts/wids.json', 'w')
     wids.write(json.dumps(jjson))
     wids.close()
 
     sys.exit()
 
-win = SaveWindowId()
-win.connect("destroy", Gtk.main_quit)
-win.show_all()
+wmctrl_line = get_current_window()
+builder = Gtk.Builder()
+builder.add_from_file('/home/danilo/scripts/save_window_id.glade')
+builder.connect_signals(SaveWindowId())
+
+window = builder.get_object('window1')
+window.show_all()
+
 Gtk.main()
