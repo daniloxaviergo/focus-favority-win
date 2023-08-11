@@ -1,6 +1,22 @@
 name: Pylint
 
-on: [push]
+on:
+  workflow_dispatch:
+    inputs:
+      choice_file:
+        description: "Select files"
+        required: true
+        type: choice
+        options:
+          - tilix
+          - save_window
+          - all
+          - uniq_file
+    inputs:
+      file_name:
+        description: "file name"
+        required: false
+        type: string
 
 jobs:
   build:
@@ -20,4 +36,5 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        echo ${{ github.event.inputs.choice_file }}
+        echo ${{ github.event.inputs.file_name }}
