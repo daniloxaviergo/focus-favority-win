@@ -37,7 +37,7 @@ jobs:
     - name: Analysing the code
       if: ${{ !contains('uniq_file', inputs.choice_file) }}
       run: |
-        if [ ${{ github.event.inputs.choice_file }} = "all" ]; then
+        if [ "${{ github.event.inputs.choice_file }}" = "all" ]; then
           pylint $(git ls-files '*.py')
         else
           pylint $(git ls-files '*.py' | grep ${{ github.event.inputs.choice_file }})
