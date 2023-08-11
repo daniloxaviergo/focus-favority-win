@@ -12,7 +12,6 @@ on:
           - save_window
           - all
           - uniq_file
-    inputs:
       file_name:
         description: "file name"
         required: false
