@@ -20,20 +20,25 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10"]
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.10
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pylint
-    - name: Analysing the code with pylint
+    - name: Analysing the code Uniq file
+      if: ${{ contains('uniq_file', inputs.choice_file) }}
       run: |
         echo ${{ github.event.inputs.choice_file }}
         echo ${{ github.event.inputs.file_name }}
+        pylint github.event.inputs.file_name
+    - name: Analysing the code
+      if: ${{ !contains('uniq_file', inputs.choice_file) }}
+      run: |
+        echo ${{ github.event.inputs.choice_file }}
+        echo ${{ github.event.inputs.file_name }}
+        pylint $(git ls-files '*.py' | grep ${{ github.event.inputs.choice_file }})
